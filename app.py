@@ -130,10 +130,15 @@ if search_clicked and query.strip():
 
     st.session_state.candidates = results
 
-    # 단일 결과 or 정확 종목코드 입력이면 바로 선택
+    # 단일 결과 or 정확 종목코드 → 바로 선택
     if len(results) == 1 or re.match(r"^\d{6}$", query.strip()):
         st.session_state.selected = results[0]
-    # SEC 티커 정확 매치도 바로 선택
+    # 첫 결과가 정확히 입력한 이름과 일치하는 상장사이면 바로 선택
+    elif (route == "dart"
+          and results[0]["corp_name"] == query.strip()
+          and results[0].get("stock_code", "").strip()):
+        st.session_state.selected = results[0]
+    # SEC 티커 정확 매치 → 바로 선택
     elif route == "sec" and results[0].get("match_type") == "ticker":
         st.session_state.selected = results[0]
 

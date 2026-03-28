@@ -93,7 +93,6 @@ def search_company(query: str) -> list[dict]:
     def sort_key(item):
         nm = item["corp_name"]
         has_stock = 1 if item["stock_code"].strip() else 2
-        # 정확 일치 최우선, 접두 일치 차순, 나머지
         if nm == q:
             exact = 0
         elif nm.startswith(q):
@@ -103,6 +102,11 @@ def search_company(query: str) -> list[dict]:
         return (exact, has_stock, nm)
 
     results.sort(key=sort_key)
+
+    # 상장사 결과가 하나라도 있으면 비상장사 제외
+    listed = [r for r in results if r.get("stock_code", "").strip()]
+    if listed:
+        results = listed
 
     _save(f"co_{q}", results[:10])
     return results[:10]

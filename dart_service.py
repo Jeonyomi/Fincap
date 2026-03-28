@@ -10,7 +10,8 @@ load_dotenv(dotenv_path=".env", override=False)
 API_KEY = os.environ.get("DART_API_KEY", "")
 BASE = "https://opendart.fss.or.kr/api"
 
-CACHE_DIR = Path("cache")
+import tempfile as _tempfile
+CACHE_DIR = Path(_tempfile.gettempdir()) / "fincap_dart"
 CACHE_DIR.mkdir(exist_ok=True)
 
 

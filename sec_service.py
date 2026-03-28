@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=".env", override=False)
 UA = os.environ.get("SEC_USER_AGENT", "FinancialLookup contact@example.com")
 HEADERS = {"User-Agent": UA, "Accept": "application/json"}
-CACHE_DIR = Path("cache")
+import tempfile as _tempfile
+CACHE_DIR = Path(_tempfile.gettempdir()) / "fincap_sec"
 CACHE_DIR.mkdir(exist_ok=True)
 
 

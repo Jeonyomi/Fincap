@@ -20,6 +20,24 @@ from sec_service import (
 
 st.set_page_config(page_title="Financial Lookup", page_icon="\U0001f4ca", layout="centered")
 
+# 앱 시작 시 DART 인덱스 + SEC 티커 인덱스를 캐시로 프리로드
+@st.cache_data(show_spinner=False, ttl=86400)
+def _preload_dart_index():
+    from dart_service import _load_corp_index
+    return _load_corp_index()
+
+@st.cache_data(show_spinner=False, ttl=86400)
+def _preload_sec_tickers():
+    from sec_service import _load_ticker_index
+    return _load_ticker_index()
+
+# 백그라운드 프리로드 (첫 검색 전에 미리 로드)
+try:
+    _preload_dart_index()
+    _preload_sec_tickers()
+except Exception:
+    pass
+
 # ── Language ─────────────────────────────────────────────────────────────────
 _h1, _h2 = st.columns([5, 1])
 with _h2:
